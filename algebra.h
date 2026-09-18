@@ -1,0 +1,45 @@
+#ifndef ALGEBRA_H
+#define ALGEBRA_H
+
+#include <vector>
+
+class Matrix;
+
+
+class Vector {
+  public : 
+    Vector(int size);
+
+    double& operator()(int i);
+    double operator()(int i) const;
+
+    Vector hadamard(const Vector& v) const;
+    double operator*(const Vector& v) const;
+    Vector operator*(const double& lambda) const;
+    Vector operator+(const Vector& v) const;
+    Vector operator-(const Vector& v) const;
+    Vector operator-(const double& lambda) const;
+    Matrix tensor(const Vector& v) const;
+
+    int size;
+    std::vector<double> data;
+};
+
+class Matrix {
+  public : 
+    Matrix(int rows,int cols);
+    
+    double& operator()(int r, int c);
+    double operator()(int r, int c) const;
+
+    Matrix transpose() const;
+    Matrix operator*(const Matrix& other) const;
+    Matrix operator+(const Matrix& other) const;
+    Vector operator*(const Vector& v) const;
+    Matrix operator*(const double& lambda) const;
+ 
+    int rows, cols;
+    std::vector<double> data;
+};
+
+#endif
