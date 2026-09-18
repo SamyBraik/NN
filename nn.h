@@ -3,6 +3,9 @@
 
 #include "algebra.h"
 #include "activation.h"
+#include <string>
+#include <random>
+#include "loss.h"
 
 class Layer {
   public :
@@ -31,7 +34,7 @@ class MLP {
     MLP(std::vector<int> layer_size);
 
     Vector forward(const Vector& input);
-    double compute_loss(const Vector& prediction, const Vector& target) const;
+    double compute_loss(const Vector& prediction, const Vector& target, std::string loss) const;
     void backward(const Vector& prediction, const Vector& target);
     void update_weights(double learning_rate);
 

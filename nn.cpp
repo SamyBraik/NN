@@ -1,5 +1,6 @@
 #include "nn.h"
 #include <random>
+#include <stdexcept>
 
 Layer::Layer(int n_in, int n_out) : n_in(n_in), n_out(n_out), weights(n_out, n_in), bias(n_out), last_input(n_in), last_z(n_out), grad_weights(n_out, n_in), grad_bias(n_out) {randomized_weights();}
 
@@ -54,13 +55,10 @@ Vector MLP::forward(const Vector& input){
   return current;
 }
 
-double MLP::compute_loss(const Vector& prediction, const Vector& target) const{
-  double result{0.0};
-  for (int i{0}; i < prediction.size ;i++){
-    result += (prediction(i)-target(i))*(prediction(i)-target(i));
-  }
-
-  return 0.5*result;
+double MLP::compute_loss(const Vector& prediction, const Vector& target, std::string loss) const{
+  if (loss == "MSE") return MSE(prediction, target);
+  else if (loss == "MAE") return MAE(prediction, target);
+  else return 1e100;
 }
 
 void MLP::backward(const Vector& prediction, const Vector& target){

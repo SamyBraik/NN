@@ -27,7 +27,7 @@ int main(){
 
     for (auto& [input, target] : data){
       Vector prediction = net.forward(input);
-      total_loss += net.compute_loss(prediction, target);
+      total_loss += net.compute_loss(prediction, target, "MSE");
  
       net.backward(prediction, target);
       net.update_weights(learning_rate);
