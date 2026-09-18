@@ -52,7 +52,7 @@ Vector MLP::forward(const Vector& input){
   }
 
   return current;
-}    
+}
 
 double MLP::compute_loss(const Vector& prediction, const Vector& target) const{
   double result{0.0};

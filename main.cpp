@@ -5,7 +5,7 @@ int main(){
   MLP net({2,4,8,16,4,1});
   double learning_rate = 0.1;
   int epochs = 1000;
-
+  
   std::vector<Vector> inputs;
   std::vector<Vector> targets;
 
