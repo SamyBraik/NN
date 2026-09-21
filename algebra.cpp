@@ -261,3 +261,33 @@ Matrix Matrix::operator/(const Matrix& other) const {
   return result;
 }
 
+Matrix Matrix::max_pooling (const int& k) const {
+  int rows_block = rows / k;
+  int cols_block = cols / k;
+  Matrix result(rows_block, cols_block);
+
+  int current_rows = 0;
+  int current_cols = 0;
+   //Tackle only matrixes with rows and cols divisible by k
+   
+  while (current_rows != rows_block) {
+    current_cols = 0;
+
+    while (current_cols != cols_block) {
+      int left_row_bound =current_rows * k;
+      int left_col_bound = current_cols * k;
+      int pool = (*this)(left_row_bound, left_col_bound);
+
+      for (int i{left_row_bound}; i < left_row_bound + k; i++)
+        for (int j{left_col_bound}; j < left_col_bound + k; j++)
+          if ((*this)(i,j)>pool) pool = (*this)(i,j);
+
+      result(current_rows, current_cols) = pool;
+      current_cols++;
+    }
+    current_rows++;
+  }
+
+  return result;
+}
+

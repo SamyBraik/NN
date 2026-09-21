@@ -48,6 +48,9 @@ class Matrix {
     Matrix power(const double& lambda) const;
     Matrix operator/(const double& lambda) const;
     Matrix operator/(const Matrix& other) const;
+
+    Matrix max_pooling(const int& k) const;
+    Matrix mean_pooling(const int& k) const;
  
     int rows, cols;
     std::vector<double> data;
