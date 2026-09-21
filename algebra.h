@@ -2,6 +2,7 @@
 #define ALGEBRA_H
 
 #include <vector>
+#include <cmath>
 
 class Matrix;
 
@@ -17,9 +18,13 @@ class Vector {
     double operator*(const Vector& v) const;
     Vector operator*(const double& lambda) const;
     Vector operator+(const Vector& v) const;
+    Vector operator+(const double& lambda) const;
     Vector operator-(const Vector& v) const;
     Vector operator-(const double& lambda) const;
     Matrix tensor(const Vector& v) const;
+    Vector operator/(const double& lambda) const;
+    Vector operator/(const Vector& v) const;
+    Vector power(const double& lambda) const;
 
     int size;
     std::vector<double> data;
@@ -34,9 +39,15 @@ class Matrix {
 
     Matrix transpose() const;
     Matrix operator*(const Matrix& other) const;
+    Matrix hadamard(const Matrix& other) const;
     Matrix operator+(const Matrix& other) const;
+    Matrix operator+(const double& lambda) const;
+    Matrix operator-(const Matrix& other) const;
     Vector operator*(const Vector& v) const;
     Matrix operator*(const double& lambda) const;
+    Matrix power(const double& lambda) const;
+    Matrix operator/(const double& lambda) const;
+    Matrix operator/(const Matrix& other) const;
  
     int rows, cols;
     std::vector<double> data;

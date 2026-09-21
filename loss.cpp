@@ -8,7 +8,7 @@ double MSE(const Vector& prediction, const Vector& target) {
     result += (prediction(i)-target(i))*(prediction(i)-target(i));
   }
 
-  return 1/n * result;
+  return result / n;
 }
 
 double MAE(const Vector& prediction, const Vector& target) {
@@ -19,5 +19,5 @@ double MAE(const Vector& prediction, const Vector& target) {
     result += std::abs(prediction(i)-target(i));
   }
 
-  return 1/n * result;
+  return result / n;
 }

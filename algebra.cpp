@@ -52,6 +52,16 @@ Vector Vector::operator+ (const Vector& v) const {
   return result;
 }
 
+Vector Vector::operator+(const double& lambda) const {
+  Vector result(size);
+
+  for (int i{0}; i < size; i++){
+    result(i) = data[i] + lambda;
+  }
+  
+  return result;
+}
+
 //Vector substraction
 Vector Vector::operator- (const Vector& v) const {
   Vector result(size);
@@ -86,6 +96,36 @@ Matrix Vector::tensor(const Vector& v) const {
   return result;
 }
 
+Vector Vector::operator/(const double& lambda) const {
+  Vector result(size);
+
+  for (int i{0}; i < size; i++){
+    result(i) = data[i]/lambda;
+  }
+
+  return result;
+}
+
+Vector Vector::operator/(const Vector& v) const {
+  Vector result(size);
+
+  for (int i{0}; i < size; i++){
+    result(i) = data[i]/v(i);
+  }
+
+  return result;
+}
+
+Vector Vector::power(const double& lambda) const {
+  Vector result(size);
+
+  for (int i{0}; i < size; i++){
+    result(i) = std::pow(data[i], lambda);
+  }
+
+  return result;
+}
+
 
 
 Matrix::Matrix(int rows, int cols) : rows(rows), cols(cols), data(rows*cols, 0.0) {}
@@ -108,8 +148,7 @@ Matrix Matrix::transpose() const{
 // Matrix multiplication using tiling
 Matrix Matrix::operator*(const Matrix& other) const{
   Matrix result(rows, other.cols);
-  if (cols != other.rows) {std::cout<<"Dimension mismatch"; return result;} //bof bof cette ligne
-  
+
   int T = 32;
   for (int i0{0}; i0 < rows; i0 += T)
     for (int j0{0}; j0 < other.cols; j0 += T)
@@ -122,13 +161,45 @@ Matrix Matrix::operator*(const Matrix& other) const{
   return result;
 }
 
+Matrix Matrix::hadamard(const Matrix& other) const {
+  Matrix result(rows, cols);
+
+    for(int i{0}; i < rows; i++){
+      for(int j{0}; j < cols; j++){
+        result(i,j) = (*this)(i,j)*other(i,j);
+      }
+    }
+  return result;
+  }
+
+
 // Matrix addition
 Matrix Matrix::operator+(const Matrix& other) const{
   Matrix result(rows, cols);
 
   for (int i{0}; i < rows; i++)
-    for (int j{0}; j <cols; j++)
+    for (int j{0}; j < cols; j++)
       result(i,j) = (*this)(i,j)+other(i,j);
+
+  return result;
+}
+
+Matrix Matrix::operator+(const double& lambda) const {
+  Matrix result(rows,cols);
+
+  for(int i{0}; i < rows; i++)
+    for (int j{0}; j < cols; j++)
+      result(i,j) = (*this)(i,j)+lambda;
+
+  return result;
+}
+
+Matrix Matrix::operator-(const Matrix& other) const {
+  Matrix result(rows,cols);
+
+  for (int i{0}; i < rows; i++)
+    for (int j{0}; j < cols; j++)
+      result(i,j) = (*this)(i,j)-other(i,j);
 
   return result;
 }
@@ -156,6 +227,37 @@ Matrix Matrix::operator*(const double& lambda) const{
 
   return result;
 }
- 
 
+Matrix Matrix::power(const double& lambda) const {
+  Matrix result(rows, cols);
+
+  for (int i{0}; i< rows;i++){
+    for (int j{0}; j < cols; j++)
+      result(i,j) = std::pow((*this)(i,j),lambda);
+  }
+
+  return result;
+}
+
+Matrix Matrix::operator/(const double& lambda) const{
+  Matrix result(rows, cols);
+
+  for(int i{0}; i < rows; i++){
+    for(int j{0}; j < cols; j++){
+      result(i,j) = (*this)(i,j)/lambda;
+    }
+  }
+
+  return result;
+}
+
+Matrix Matrix::operator/(const Matrix& other) const {
+  Matrix result(rows, cols);
+
+  for (int i{0}; i < rows; i++)
+    for (int j{0}; j < cols; j++)
+      result(i,j) = (*this)(i,j) / other(i,j);
+
+  return result;
+}
 

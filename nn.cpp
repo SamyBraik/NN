@@ -1,31 +1,39 @@
 #include "nn.h"
 #include <random>
 #include <stdexcept>
+#include "optimizer.h"
+#include <iostream>
 
-Layer::Layer(int n_in, int n_out) : n_in(n_in), n_out(n_out), weights(n_out, n_in), bias(n_out), last_input(n_in), last_z(n_out), grad_weights(n_out, n_in), grad_bias(n_out) {randomized_weights();}
+Layer::Layer(int n_in, int n_out, bool output_layer) : n_in(n_in), n_out(n_out), output_layer(output_layer), weights(n_out, n_in), bias(n_out), last_input(n_in), last_z(n_out), grad_weights(n_out, n_in), grad_bias(n_out) {randomized_weights();}
 
 Vector Layer::forward (const Vector& input){
   Vector z = weights * input + bias;
   last_input = input;
   last_z = z;
 
+  if (output_layer == true) return z;
+
   return ReLU(z);
 }
 
 Vector Layer::backward(const Vector& grad_output) {
-  Vector dz = grad_output.hadamard(ReLU_derivative(last_z));
+  Vector dz(grad_output.size);
+
+  if (output_layer == true) dz = grad_output;
+  else dz = grad_output.hadamard(ReLU_derivative(last_z));
+
   Matrix dW = dz.tensor(last_input);
   Vector db = dz;
   Vector dx = weights.transpose() * dz;
 
   grad_weights = dW;
   grad_bias = db;
+
   return dx;
 }
 
-void Layer::update_weights(double learning_rate){
-  weights = weights + (grad_weights * -learning_rate);
-  bias = bias + (grad_bias * -learning_rate);
+void Layer::update_weights(Optimizer& optimizer){
+    optimizer.update(weights, grad_weights, bias, grad_bias);
 }
 
 
@@ -39,9 +47,15 @@ void Layer::randomized_weights (){
   }
 }
 
-MLP::MLP(std::vector<int> layer_size){
+MLP::MLP(std::vector<int> layer_size, OptimizerType opt_type, double learning_rate){
   for (int i{0}; i < layer_size.size()-1; i++){
-    layers.push_back(Layer(layer_size[i],layer_size[i+1]));
+    bool is_output_layer = (i == layer_size.size()-2);
+    layers.push_back(Layer(layer_size[i],layer_size[i+1], is_output_layer));
+  }
+
+  for (auto& layer : layers){
+    Optimizer* opt = make_optimizer(opt_type, layer.n_out, layer.n_in, learning_rate);
+    optimizers.push_back(opt);
   }
 }
 
@@ -63,14 +77,15 @@ double MLP::compute_loss(const Vector& prediction, const Vector& target, std::st
 
 void MLP::backward(const Vector& prediction, const Vector& target){
   Vector grad = prediction-target;
+
   for(int i{static_cast<int>(layers.size())-1}; i >= 0; i--){
     grad = layers[i].backward(grad);
   }
 }
 
-void MLP::update_weights(double learning_rate){
-  for (int i{0}; i<layers.size(); i++){
-    layers[i].update_weights(learning_rate);
+void MLP::update_weights(){
+  for (int i{0}; i < layers.size(); i++){
+    layers[i].update_weights(*optimizers[i]);
   }
 }
 

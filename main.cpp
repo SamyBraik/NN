@@ -2,7 +2,7 @@
 #include "nn.h"
 
 int main(){
-  MLP net({2,4,8,16,4,1});
+  MLP net({2,4,8,16,4,1}, OptimizerType::ADAM_, 0.01);
   double learning_rate = 0.1;
   int epochs = 1000;
   
@@ -30,7 +30,7 @@ int main(){
       total_loss += net.compute_loss(prediction, target, "MSE");
  
       net.backward(prediction, target);
-      net.update_weights(learning_rate);
+      net.update_weights();
     }
 
     if (epoch % 100 == 0) std::cout<< "Epoch :" << epoch << ", loss :" << total_loss << '\n';
