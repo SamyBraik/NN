@@ -16,15 +16,15 @@ class Vector {
 
     Vector hadamard(const Vector& v) const;
     double operator*(const Vector& v) const;
-    Vector operator*(const double& lambda) const;
+    Vector operator*(double lambda) const;
     Vector operator+(const Vector& v) const;
-    Vector operator+(const double& lambda) const;
+    Vector operator+(double lambda) const;
     Vector operator-(const Vector& v) const;
-    Vector operator-(const double& lambda) const;
+    Vector operator-(double lambda) const;
     Matrix tensor(const Vector& v) const;
-    Vector operator/(const double& lambda) const;
+    Vector operator/(double lambda) const;
     Vector operator/(const Vector& v) const;
-    Vector power(const double& lambda) const;
+    Vector power(double lambda) const;
 
     int size;
     std::vector<double> data;
@@ -41,16 +41,17 @@ class Matrix {
     Matrix operator*(const Matrix& other) const;
     Matrix hadamard(const Matrix& other) const;
     Matrix operator+(const Matrix& other) const;
-    Matrix operator+(const double& lambda) const;
+    Matrix operator+(double lambda) const;
     Matrix operator-(const Matrix& other) const;
     Vector operator*(const Vector& v) const;
-    Matrix operator*(const double& lambda) const;
-    Matrix power(const double& lambda) const;
-    Matrix operator/(const double& lambda) const;
+    Matrix operator*(double lambda) const;
+    Matrix power(double lambda) const;
+    Matrix operator/(double lambda) const;
     Matrix operator/(const Matrix& other) const;
 
-    Matrix max_pooling(const int& k) const;
-    Matrix mean_pooling(const int& k) const;
+    Matrix max_pooling(int k) const;
+    Matrix mean_pooling(int k) const;
+    Matrix convolution(const Matrix& kernel, int stride) const;
  
     int rows, cols;
     std::vector<double> data;

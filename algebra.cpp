@@ -31,7 +31,7 @@ double Vector::operator* (const Vector& v) const {
 }
 
 //Vector and scalar product
-Vector Vector::operator* (const double& lambda) const{
+Vector Vector::operator* (double lambda) const{
   Vector result(size);
 
   for (int i{0}; i < size; i++){
@@ -52,7 +52,7 @@ Vector Vector::operator+ (const Vector& v) const {
   return result;
 }
 
-Vector Vector::operator+(const double& lambda) const {
+Vector Vector::operator+(double lambda) const {
   Vector result(size);
 
   for (int i{0}; i < size; i++){
@@ -74,7 +74,7 @@ Vector Vector::operator- (const Vector& v) const {
 }
 
 // Vector substraction with scalar
-Vector Vector::operator- (const double& lambda) const{
+Vector Vector::operator- (double lambda) const{
   Vector result(size);
 
   for (int i{0}; i < size; i++){
@@ -96,7 +96,7 @@ Matrix Vector::tensor(const Vector& v) const {
   return result;
 }
 
-Vector Vector::operator/(const double& lambda) const {
+Vector Vector::operator/(double lambda) const {
   Vector result(size);
 
   for (int i{0}; i < size; i++){
@@ -116,7 +116,7 @@ Vector Vector::operator/(const Vector& v) const {
   return result;
 }
 
-Vector Vector::power(const double& lambda) const {
+Vector Vector::power(double lambda) const {
   Vector result(size);
 
   for (int i{0}; i < size; i++){
@@ -184,7 +184,7 @@ Matrix Matrix::operator+(const Matrix& other) const{
   return result;
 }
 
-Matrix Matrix::operator+(const double& lambda) const {
+Matrix Matrix::operator+(double lambda) const {
   Matrix result(rows,cols);
 
   for(int i{0}; i < rows; i++)
@@ -216,7 +216,7 @@ Vector Matrix::operator*(const Vector& v) const {
 }
 
 //Matrix and scalar product
-Matrix Matrix::operator*(const double& lambda) const{
+Matrix Matrix::operator*(double lambda) const{
   Matrix result(rows,cols);
 
   for (int i{0}; i < rows; i++){
@@ -228,7 +228,7 @@ Matrix Matrix::operator*(const double& lambda) const{
   return result;
 }
 
-Matrix Matrix::power(const double& lambda) const {
+Matrix Matrix::power(double lambda) const {
   Matrix result(rows, cols);
 
   for (int i{0}; i< rows;i++){
@@ -239,7 +239,7 @@ Matrix Matrix::power(const double& lambda) const {
   return result;
 }
 
-Matrix Matrix::operator/(const double& lambda) const{
+Matrix Matrix::operator/(double lambda) const{
   Matrix result(rows, cols);
 
   for(int i{0}; i < rows; i++){
@@ -261,7 +261,7 @@ Matrix Matrix::operator/(const Matrix& other) const {
   return result;
 }
 
-Matrix Matrix::max_pooling (const int& k) const {
+Matrix Matrix::max_pooling (int k) const {
   int rows_block = rows / k;
   int cols_block = cols / k;
   Matrix result(rows_block, cols_block);
@@ -291,7 +291,7 @@ Matrix Matrix::max_pooling (const int& k) const {
   return result;
 }
 
-Matrix Matrix::mean_pooling(const int& k) const {
+Matrix Matrix::mean_pooling(int k) const {
   int rows_block = rows / k;
   int cols_block = cols / k;
   Matrix result(k,k);
@@ -315,6 +315,23 @@ Matrix Matrix::mean_pooling(const int& k) const {
       current_cols ++;
     }
     current_rows++;
+  }
+  return result;
+}
+
+Matrix Matrix::convolution(const Matrix& kernel, int stride) const {
+  int out_rows = (rows - kernel.rows) / stride + 1;
+  int out_cols = (cols - kernel.cols) / stride + 1;
+  Matrix result(out_rows, out_cols);
+
+  for (int i{0}; i < out_rows; i++){
+    for (int j{0}; j < out_cols; j++){
+      double sum = 0.0;
+      for (int p{0}; p < kernel.rows; p++)
+        for (int q{0}; q < kernel.cols; q++)
+          sum += (*this)(i*stride + p, j*stride + q) * kernel(p,q);
+      result(i,j) = sum;
+    }
   }
   return result;
 }
