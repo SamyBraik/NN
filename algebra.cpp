@@ -274,7 +274,7 @@ Matrix Matrix::max_pooling (const int& k) const {
     current_cols = 0;
 
     while (current_cols != cols_block) {
-      int left_row_bound =current_rows * k;
+      int left_row_bound = current_rows * k;
       int left_col_bound = current_cols * k;
       int pool = (*this)(left_row_bound, left_col_bound);
 
@@ -288,6 +288,34 @@ Matrix Matrix::max_pooling (const int& k) const {
     current_rows++;
   }
 
+  return result;
+}
+
+Matrix Matrix::mean_pooling(const int& k) const {
+  int rows_block = rows / k;
+  int cols_block = cols / k;
+  Matrix result(k,k);
+
+  int current_rows = 0;
+  int current_cols = 0;
+
+  while (current_rows != rows_block) {
+    current_cols = 0;
+
+    while (current_cols != cols_block){
+      int left_row_bound = current_rows * k;
+      int left_col_bound = current_cols * k;
+      int sum = 0;
+
+      for (int i{left_row_bound}; i < left_row_bound + k; i++)
+        for (int j{left_col_bound}; j < left_col_bound + k; j++)
+          sum += (*this)(i,j);
+
+      result(current_rows, current_cols) = sum / static_cast<double>(k*k);
+      current_cols ++;
+    }
+    current_rows++;
+  }
   return result;
 }
 
