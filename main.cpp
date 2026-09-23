@@ -2,6 +2,7 @@
 #include "nn.h"
 
 int main(){
+  /*
   MLP net({2,4,8,16,4,1}, OptimizerType::ADAM_, 0.01);
   double learning_rate = 0.1;
   int epochs = 1000;
@@ -34,6 +35,19 @@ int main(){
     }
 
     if (epoch % 100 == 0) std::cout<< "Epoch :" << epoch << ", loss :" << total_loss << '\n';
+  }
+  */ 
+  Matrix matrice(3,3);
+  matrice.data = {4,0,3,4,2,1,0,3,1};
+  Matrix kernel(2,2);
+  kernel.data = {1,-1,1,-1};
+  Matrix output = matrice.convolution(kernel, 1);
+
+  for (int i{0}; i < output.rows; i++){
+    for (int j{0}; j < output.cols; j++){
+      std::cout << output(i,j) << ' ';
+    }
+    std::cout << '\n';
   }
 
   return 0;

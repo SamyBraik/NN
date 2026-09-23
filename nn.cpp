@@ -89,3 +89,14 @@ void MLP::update_weights(){
   }
 }
 
+Matrix ConvLayer::forward(const Matrix& input) {
+  Matrix z = input.convolution(kernel) + bias;
+  last_input = input;
+  last_z = z;
+
+  return ReLU(z);
+}
+
+Matrix ConvLayer::backward(const Matrix& grad_output) {
+
+}

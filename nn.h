@@ -39,9 +39,28 @@ class MLP {
     double compute_loss(const Vector& prediction, const Vector& target, std::string loss) const;
     void backward(const Vector& prediction, const Vector& target);
     void update_weights();
-
     std::vector<Layer> layers;
     std::vector<Optimizer*> optimizers;
+};
+
+
+class ConvLayer {
+  public : 
+    ConvLayer(int kernel_Size int stride);
+
+    Matrix forward(const Matrix& input);
+    Matrix backward(const Matrix& grad_output);
+
+    Matrix kernel;
+    Vector bias;
+
+    Matrix grad_kernel;
+    Vector grad_bias;
+
+    Matrix last_input, last_z;
+
+  private : 
+    void randomized_kernel();
 };
 
 #endif
