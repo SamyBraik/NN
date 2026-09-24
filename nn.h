@@ -46,18 +46,22 @@ class MLP {
 
 class ConvLayer {
   public : 
-    ConvLayer(int kernel_Size int stride);
+    ConvLayer(int kernel_size, int stride)
+      : kernel(kernel_size, kernel_size), stride(stride), bias(0.0), grad_kernel(kernel_size, kernel_size), 
+      grad_bias(0.0), last_input(1,1), last_z(1,1) {randomized_kernel();}
 
     Matrix forward(const Matrix& input);
     Matrix backward(const Matrix& grad_output);
 
+    int kernel_size, stride;
     Matrix kernel;
-    Vector bias;
+    double bias;
 
     Matrix grad_kernel;
-    Vector grad_bias;
+    double grad_bias;
 
     Matrix last_input, last_z;
+ 
 
   private : 
     void randomized_kernel();

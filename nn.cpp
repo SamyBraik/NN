@@ -89,8 +89,19 @@ void MLP::update_weights(){
   }
 }
 
+void ConvLayer::randomized_kernel (){
+  static std::mt19937 gen(std::random_device{}());
+  std::uniform_real_distribution<double> dist(-0.5,0.5);
+  for (int i{0}; i < kernel_size; i++){
+    for (int j{0}; j < kernel_size; j++){
+      kernel(i,j) = dist(gen);
+    }
+  }
+}
+
+
 Matrix ConvLayer::forward(const Matrix& input) {
-  Matrix z = input.convolution(kernel) + bias;
+  Matrix z = input.convolution(kernel, stride) + bias;
   last_input = input;
   last_z = z;
 
@@ -98,5 +109,5 @@ Matrix ConvLayer::forward(const Matrix& input) {
 }
 
 Matrix ConvLayer::backward(const Matrix& grad_output) {
-
+  
 }
