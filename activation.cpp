@@ -22,6 +22,26 @@ Vector ReLU_derivative (const Vector& x) {
   return z;
 }
 
+Matrix ReLU (const Matrix& matrix) {
+  Matrix result(matrix.rows, matrix.cols);
+
+  for (int i{0}; i < matrix.rows*matrix.cols; i++){
+    if (matrix.data[i]>0) result.data[i] = matrix.data[i];
+    else result.data[i] = 0;
+  }
+  return result;
+}
+
+Matrix ReLU_derivative (const Matrix& matrix){
+  Matrix result(matrix.rows, matrix.cols);
+
+  for (int i{0}; i < matrix.rows*matrix.cols; i++){
+    if (matrix.data[i]>0) result.data[i] = 1;
+    else result.data[i] = 0;
+  }
+  return result;
+}
+
 Vector Sigmoide (const Vector& x) {
   Vector z(x.size);
 
