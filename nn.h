@@ -53,7 +53,7 @@ class ConvLayer {
     Matrix forward(const Matrix& input);
     Matrix backward(const Matrix& grad_output);
 
-    int kernel_size, stride;
+    int kernel_size, stride, padding;
     Matrix kernel;
     double bias;
 

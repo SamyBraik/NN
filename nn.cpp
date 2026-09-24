@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include "optimizer.h"
 #include <iostream>
+#include <numeric>
 
 Layer::Layer(int n_in, int n_out, bool output_layer) : n_in(n_in), n_out(n_out), output_layer(output_layer), weights(n_out, n_in), bias(n_out), last_input(n_in), last_z(n_out), grad_weights(n_out, n_in), grad_bias(n_out) {randomized_weights();}
 
@@ -108,6 +109,40 @@ Matrix ConvLayer::forward(const Matrix& input) {
   return ReLU(z);
 }
 
+//Based on Raphael Cousins's CNN Essentials
 Matrix ConvLayer::backward(const Matrix& grad_output) {
-  
+  Matrix dz = grad_output.hadamard(ReLU_derivative(last_z));
+
+  Matrix dK(kernel_size, kernel_size);
+  for (int k{0}; k < kernel_size; k++){
+    for (int l{0}; l < kernel_size; l++){
+      double sum = 0.0;
+      for (int i{0}; i < dz.rows; i++){
+        for (int j{0}; j < dz.cols; j++){
+          sum += dz(i,j)*last_input(stride*i+k-padding, stride*j+l-padding);
+        }
+      }
+      dK(k,l) = sum;
+    }
+  }
+
+  double db = std::accumulate(dz.data.begin(), dz.data.end(), 0.0);
+
+  Matrix dx(last_input.rows,last_input.cols);
+  for (int i{0}; i < last_input.rows; i++){
+    for (int j{0}; j < last_input.cols; j++){
+      double sum = 0.0;
+      for (int k{0}; k < kernel_size; k++){
+        for (int l{0}; l < kernel_size; l++){
+          sum += dz((i+padding-k)/stride, (j+padding-l)/stride)*kernel(k,l);
+        }
+      }
+      dx(i,j) = sum;
+    }
+  }
+
+  grad_kernel = dK;
+  grad_bias = db;
+
+  return dx;
 }
