@@ -146,3 +146,39 @@ Matrix ConvLayer::backward(const Matrix& grad_output) {
 
   return dx;
 }
+
+Matrix MaxPoolLayer::forward(const Matrix& input) {
+  last_input = input;
+  return input.max_pooling(pool_size, stride, padding);
+}
+
+Matrix MaxPoolLayer::backward(constr Matrix& grad_ouput){
+  Matrix dx(last_input.rows, last_input.cols);
+
+  int out_rows = grad_ouput.rows;
+  int out_cols = grad_output.cols;
+
+  for (int i{0}; i < out_rows; i++){
+    for (int j{0}; j < out_cols; j++){
+      double max_val = -std::numeric_limits<double>::infinity();
+      int max_r = -1, max_c = 1;
+
+      for (int p{0}; p < pool_size; p++){
+        for (int q{0}; q < pool_size; q++){
+          int r = i*stride + p -padding;
+          int c = j*stride + q -padding;
+          if (r < 0 || r >=last_input.rows || c < 0 || c >= last_input.cols) continue;
+          if (last_input(r,c) > max_val) {
+            max_val = last_input(r,c);
+            max_r = r;
+            max_c = c;
+          }
+        }
+      }
+      if (max_r != -1 && max_c != -1) {
+        dx(max_r, max_c) += grad_output(i,j);
+      }
+    }
+  }
+  return dx;
+}

@@ -46,8 +46,8 @@ class MLP {
 
 class ConvLayer {
   public : 
-    ConvLayer(int kernel_size, int stride)
-      : kernel(kernel_size, kernel_size), stride(stride), bias(0.0), grad_kernel(kernel_size, kernel_size), 
+    ConvLayer(int kernel_size, int stride, int padding)
+      : kernel(kernel_size, kernel_size), stride(stride), padding(padding), bias(0.0), grad_kernel(kernel_size, kernel_size), 
       grad_bias(0.0), last_input(1,1), last_z(1,1) {randomized_kernel();}
 
     Matrix forward(const Matrix& input);
@@ -65,6 +65,19 @@ class ConvLayer {
 
   private : 
     void randomized_kernel();
+};
+
+class MaxPoolLayer {
+  public :
+    PoolingLayer(int pool_size, int stride, int padding) pool_size(pool_size), stride(stride), padding(padding);
+
+    Matrix forward(const Matrix& input);
+    Matrix backward(const Matrix& grad_output);
+
+  private :
+    int pool_size, stride, padding;
+    Matrix last_input;
+
 };
 
 #endif
