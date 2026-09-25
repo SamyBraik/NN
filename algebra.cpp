@@ -319,17 +319,22 @@ Matrix Matrix::mean_pooling(int k) const {
   return result;
 }
 
-Matrix Matrix::convolution(const Matrix& kernel, int stride) const {
-  int out_rows = (rows - kernel.rows) / stride + 1;
-  int out_cols = (cols - kernel.cols) / stride + 1;
+Matrix Matrix::convolution(const Matrix& kernel, int stride, int padding) const {
+  int out_rows = (rows + 2*padding - kernel.rows) / stride + 1;
+  int out_cols = (cols + 2*padding - kernel.cols) / stride + 1;
   Matrix result(out_rows, out_cols);
 
   for (int i{0}; i < out_rows; i++){
     for (int j{0}; j < out_cols; j++){
       double sum = 0.0;
-      for (int p{0}; p < kernel.rows; p++)
-        for (int q{0}; q < kernel.cols; q++)
-          sum += (*this)(i*stride + p, j*stride + q) * kernel(p,q);
+      for (int p{0}; p < kernel.rows; p++){
+        for (int q{0}; q < kernel.cols; q++){
+          int r = i*stride + p -padding;
+          int c = j*stride + q -padding;
+          if (r < 0 || r >= rows || c < 0 || c >=cols) continue;
+          sum += (*this)(r,c) * kernel(p,q);
+        }
+      }
       result(i,j) = sum;
     }
   }

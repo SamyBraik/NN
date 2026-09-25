@@ -51,7 +51,7 @@ class Matrix {
 
     Matrix max_pooling(int k) const;
     Matrix mean_pooling(int k) const;
-    Matrix convolution(const Matrix& kernel, int stride) const;
+    Matrix convolution(const Matrix& kernel, int stride, int padding) const;
  
     int rows, cols;
     std::vector<double> data;
