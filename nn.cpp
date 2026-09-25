@@ -102,7 +102,7 @@ void ConvLayer::randomized_kernel (){
 
 
 Matrix ConvLayer::forward(const Matrix& input) {
-  Matrix z = input.convolution(kernel, stride) + bias;
+  Matrix z = input.convolution(kernel, stride, padding) + bias;
   last_input = input;
   last_z = z;
 
