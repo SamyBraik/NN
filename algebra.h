@@ -49,8 +49,8 @@ class Matrix {
     Matrix operator/(double lambda) const;
     Matrix operator/(const Matrix& other) const;
 
-    Matrix max_pooling(int k) const;
-    Matrix mean_pooling(int k) const;
+    Matrix max_pooling(int k, int stride, int padding) const;
+    Matrix mean_pooling(int k, int stride, int padding) const;
     Matrix convolution(const Matrix& kernel, int stride, int padding) const;
  
     int rows, cols;

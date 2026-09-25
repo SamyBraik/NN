@@ -261,60 +261,52 @@ Matrix Matrix::operator/(const Matrix& other) const {
   return result;
 }
 
-Matrix Matrix::max_pooling (int k) const {
-  int rows_block = rows / k;
-  int cols_block = cols / k;
-  Matrix result(rows_block, cols_block);
+Matrix Matrix::max_pooling(int k, int stride, int padding) const {
+  int out_rows = (rows +2*padding -k) / stride + 1;
+  int cols_block = (cols +2*padding - k)/ stride + 1;
+  Matrix result(out_rows, out_cols);
+  
+  for (int i{0}; i < out_rows; i++){
+    for (int j{0}; j < out_cols; j++){
+      double pool = -std::numeric_limits<double>::infinity();
+      bool max = false;
 
-  int current_rows = 0;
-  int current_cols = 0;
-   //Tackle only matrixes with rows and cols divisible by k
-   
-  while (current_rows != rows_block) {
-    current_cols = 0;
+      for (int p{0}; p < k; p++){
+        for (int q{0}; q < k; q++){
+          int r = i*stride + p -padding;
+          int c = j*stride + q - padding;
+          if (r < 0 || r >= rows ||c < 0 || c>=cols) continue;
+          if (!found || (*this)(r,c) > pool) {pool = (*this)(r,c); found = true;}
+        }
+      }
 
-    while (current_cols != cols_block) {
-      int left_row_bound = current_rows * k;
-      int left_col_bound = current_cols * k;
-      int pool = (*this)(left_row_bound, left_col_bound);
-
-      for (int i{left_row_bound}; i < left_row_bound + k; i++)
-        for (int j{left_col_bound}; j < left_col_bound + k; j++)
-          if ((*this)(i,j)>pool) pool = (*this)(i,j);
-
-      result(current_rows, current_cols) = pool;
-      current_cols++;
+      result(i,j) = pool;
     }
-    current_rows++;
   }
-
   return result;
 }
 
-Matrix Matrix::mean_pooling(int k) const {
-  int rows_block = rows / k;
-  int cols_block = cols / k;
-  Matrix result(k,k);
+Matrix Matrix::mean_pooling(int k, int stride, int padding) const {
+  int out_rows = (rows + 2*padding - k) / stride + 1;
+  int out_cols = (cols +2*padding - k) / stride + 1;
+  Matrix result(out_rows, out_rows);
 
-  int current_rows = 0;
-  int current_cols = 0;
+  for (int i{0}; i < out_rows; i++){
+    for (int j{0}; j < out_cols; j++){
+      double sum = 0.0;
+      int count = 0;
 
-  while (current_rows != rows_block) {
-    current_cols = 0;
-
-    while (current_cols != cols_block){
-      int left_row_bound = current_rows * k;
-      int left_col_bound = current_cols * k;
-      int sum = 0;
-
-      for (int i{left_row_bound}; i < left_row_bound + k; i++)
-        for (int j{left_col_bound}; j < left_col_bound + k; j++)
-          sum += (*this)(i,j);
-
-      result(current_rows, current_cols) = sum / static_cast<double>(k*k);
-      current_cols ++;
+      for (int p{0}; p < k; p++){
+        for (int q{0}; q < k; q++){
+          int r = i*stride + p -padding;
+          int c = j*stride + q -padding;
+          if (r < 0 || r >= rows || c < 0 || c >= cols) continue;
+          sum += (*this)(r,c);
+          count++;
+        }
+      }
+      result(i,j) = sum/count;
     }
-    current_rows++;
   }
   return result;
 }
