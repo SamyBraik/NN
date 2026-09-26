@@ -25,6 +25,7 @@ class Vector {
     Vector operator/(double lambda) const;
     Vector operator/(const Vector& v) const;
     Vector power(double lambda) const;
+    Matrix unflatten(int rows, int cols) const;
 
     int size;
     std::vector<double> data;
@@ -52,6 +53,7 @@ class Matrix {
     Matrix max_pooling(int k, int stride, int padding) const;
     Matrix mean_pooling(int k, int stride, int padding) const;
     Matrix convolution(const Matrix& kernel, int stride, int padding) const;
+    Vector flatten() const;
  
     int rows, cols;
     std::vector<double> data;

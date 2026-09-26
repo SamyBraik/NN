@@ -333,3 +333,20 @@ Matrix Matrix::convolution(const Matrix& kernel, int stride, int padding) const 
   return result;
 }
 
+Vector Matrix::flatten() const{
+  Vector result(rows*cols); 
+
+  for (int i{0}; i < rows*cols; i++){
+    result(i) = data[i];
+  }
+  return result;
+}
+
+Matrix Vector::unflatten(int rows, int cols) const{
+  Matrix result(rows, cols);
+
+  for (int i{0}; i < rows*cols; i++){
+    result.data[i] = data[i];
+  }
+  return result;
+}
