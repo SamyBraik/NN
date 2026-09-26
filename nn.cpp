@@ -182,3 +182,32 @@ Matrix MaxPoolLayer::backward(constr Matrix& grad_ouput){
   }
   return dx;
 }
+
+Matrix MeanPoolLayer::forward(const Matrix& input){
+  last_input = input;
+  return input.mean_pooling(pool_size, stride, padding);
+}
+
+Matrix MeanPoolLayer::backward(const Matrix& grad_output) {
+  Matrix dx(last_input.rows, last_input.cols);
+  int div = pool_size * pool_size;
+
+  int out_rows = grad_output.rows;
+  int out_cols = grad_output.cols;
+
+  for (int i{0}; i < out_rows; i++){
+    for (int j{0}; j < out_cols; j++){
+      double mean = grad_output(i,j) / div;
+
+      for (int p{0}; p < pool_size; p++){
+        for (int q{0}; q < pool_size; q++){
+          int r = i*stride + p - padding;
+          int c = j*stride + q - padding;
+          if (r < 0 || r >= last_input.rows || c < 0 || c >= last_input.cols) continue;
+          dx(r,c) += mean;
+        }
+      }
+    }
+  }
+  return dx;
+}

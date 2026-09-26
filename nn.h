@@ -69,7 +69,7 @@ class ConvLayer {
 
 class MaxPoolLayer {
   public :
-    PoolingLayer(int pool_size, int stride, int padding) pool_size(pool_size), stride(stride), padding(padding);
+    MaxPoolLayer(int pool_size, int stride, int padding) : pool_size(pool_size), stride(stride), padding(padding), last_input(1,1) {}
 
     Matrix forward(const Matrix& input);
     Matrix backward(const Matrix& grad_output);
@@ -78,6 +78,18 @@ class MaxPoolLayer {
     int pool_size, stride, padding;
     Matrix last_input;
 
+};
+
+class MeanPoolLayer {
+  public :
+    MeanPoolLayer(int pool_size, int stride, int padding) : pool_size(pool_size)  stride(stride), padding(padding), last_input(1,1) {}
+
+    Matrix forward(const Matrix& input);
+    Matrix backward(const Matrix& grad_output);
+
+  private :
+    int pool_size, stride, padding;
+    Matrix last_input;
 };
 
 #endif
