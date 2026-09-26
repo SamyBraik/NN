@@ -94,7 +94,7 @@ void ConvLayer::randomized_kernel (){
   static std::mt19937 gen(std::random_device{}());
   std::uniform_real_distribution<double> dist(-0.5,0.5);
   for (int i{0}; i < kernel_size; i++){
-    for (int j{0}; j < kernel_size; j++){
+    for (int j{0}; j < kernel_size; j++){ 
       kernel(i,j) = dist(gen);
     }
   }
