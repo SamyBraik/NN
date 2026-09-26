@@ -263,7 +263,7 @@ Matrix Matrix::operator/(const Matrix& other) const {
 
 Matrix Matrix::max_pooling(int k, int stride, int padding) const {
   int out_rows = (rows +2*padding -k) / stride + 1;
-  int cols_block = (cols +2*padding - k)/ stride + 1;
+  int out_cols = (cols +2*padding - k)/ stride + 1;
   Matrix result(out_rows, out_cols);
   
   for (int i{0}; i < out_rows; i++){
@@ -276,7 +276,7 @@ Matrix Matrix::max_pooling(int k, int stride, int padding) const {
           int r = i*stride + p -padding;
           int c = j*stride + q - padding;
           if (r < 0 || r >= rows ||c < 0 || c>=cols) continue;
-          if (!found || (*this)(r,c) > pool) {pool = (*this)(r,c); found = true;}
+          if (!max || (*this)(r,c) > pool) {pool = (*this)(r,c); max = true;}
         }
       }
 

@@ -82,7 +82,7 @@ class MaxPoolLayer {
 
 class MeanPoolLayer {
   public :
-    MeanPoolLayer(int pool_size, int stride, int padding) : pool_size(pool_size)  stride(stride), padding(padding), last_input(1,1) {}
+    MeanPoolLayer(int pool_size, int stride, int padding) : pool_size(pool_size),  stride(stride), padding(padding), last_input(1,1) {}
 
     Matrix forward(const Matrix& input);
     Matrix backward(const Matrix& grad_output);

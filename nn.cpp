@@ -152,10 +152,10 @@ Matrix MaxPoolLayer::forward(const Matrix& input) {
   return input.max_pooling(pool_size, stride, padding);
 }
 
-Matrix MaxPoolLayer::backward(constr Matrix& grad_ouput){
+Matrix MaxPoolLayer::backward(const Matrix& grad_output){
   Matrix dx(last_input.rows, last_input.cols);
 
-  int out_rows = grad_ouput.rows;
+  int out_rows = grad_output.rows;
   int out_cols = grad_output.cols;
 
   for (int i{0}; i < out_rows; i++){
