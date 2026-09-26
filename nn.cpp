@@ -5,7 +5,7 @@
 #include <iostream>
 #include <numeric>
 
-Layer::Layer(int n_in, int n_out, bool output_layer) : n_in(n_in), n_out(n_out), output_layer(output_layer), weights(n_out, n_in), bias(n_out), last_input(n_in), last_z(n_out), grad_weights(n_out, n_in), grad_bias(n_out) {randomized_weights();}
+Layer::Layer(int n_in, int n_out, bool output_layer) : n_in(n_in), n_out(n_out), output_layer(output_layer), weights(n_out, n_in), bias(n_out), grad_weights(n_out, n_in), grad_bias(n_out), last_input(n_in), last_z(n_out) {randomized_weights();}
 
 Vector Layer::forward (const Vector& input){
   Vector z = weights * input + bias;
@@ -49,7 +49,7 @@ void Layer::randomized_weights (){
 }
 
 MLP::MLP(std::vector<int> layer_size, OptimizerType opt_type, double learning_rate){
-  for (int i{0}; i < layer_size.size()-1; i++){
+  for (size_t i{0}; i < layer_size.size()-1; i++){
     bool is_output_layer = (i == layer_size.size()-2);
     layers.push_back(Layer(layer_size[i],layer_size[i+1], is_output_layer));
   }
@@ -63,7 +63,7 @@ MLP::MLP(std::vector<int> layer_size, OptimizerType opt_type, double learning_ra
 Vector MLP::forward(const Vector& input){
   Vector current = input;
 
-  for (int i{0}; i < layers.size(); i++){
+  for (size_t i{0}; i < layers.size(); i++){
     current = layers[i].forward(current);
   }
 
@@ -85,7 +85,7 @@ void MLP::backward(const Vector& prediction, const Vector& target){
 }
 
 void MLP::update_weights(){
-  for (int i{0}; i < layers.size(); i++){
+  for (size_t i{0}; i < layers.size(); i++){
     layers[i].update_weights(*optimizers[i]);
   }
 }
